@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+<link rel="stylesheet"
+      href="{{ url_for('static', filename=config.FOOTABLE_CSS) }}"/>
+<script src="{{ url_for('static', filename=config.FOOTABLE_JS) }}"></script>
+<script
+  src="{{ url_for('static', filename=config.FOOTABLE_JS_SORT) }}"></script>
+<link rel="stylesheet"
+      href="{{ url_for('static', filename=config.JQUERY_UI_CSS )}}">
+
+<script src="{{url_for('static', filename=config.JQUERY_UI_JS ) }}"></script>
+<script src="{{ url_for('static', filename='js/upload_view.js') }}"></script>
+
+{% endblock %}
+
+{% block header %}
+<h4>Preparation</h4>
+{% endblock %}
+
+{% block content %}
+{% block intro %}{% endblock %}
+<h4>Modify the data set</h4>
+<h5>Transpose</h5>
+<p>
+  After you have selected your data you should see the information panel. It
+  shows
+  information about your data. Yay!
+  You should also be able to see (the number of) odorants and receptors.
+  If they seem to be switched then just switch it back with the "transpose"
+  button.
+</p>
+<h5>Update Matrix</h5>
+<p>
+  You can also change the entries of your data matrix until you hit the "save"
+  button at the bottom. Your data is then final and cannot be changed anymore.
+</p>
+<h5>Methods</h5>
+<p>
+  In the online app you can just choose between two methods: backward
+  elimination and forward selection.
+  If you are an academic institution it is also possible to use linear
+  optimization with the Gurobi solver for free. Therefore you
+  get a Gurobi licence and you have to checkout DODO from <a
+  href="http://github.com/marcusschroeder/olfactory">Github</a>.
+</p>
+{% block uploadform %}{% endblock %}
+
+<div id="settings-panel">
+  <div class="row box">
+    <h4>Information</h4>
+
+
+    <div id="file_info"></div>
+  </div>
+
+  <div class="row box">
+    <h4>Receptors and Odorants</h4>
+
+    <div>
+      <div class="col-md-4" id="f">Features</div>
+      <div class="col-md-4 transpose-button-wrapper">
+        <button id="transpose" class="btn btn-primary"
+                onclick="transpose()">
+          &lt;- Transpose -&gt;
+        </button>
+      </div>
+
+      <div class="col-md-4" id="n">Names</div>
+    </div>
+  </div>
+
+  <div class="row box">
+    <h4>Matrix
+
+    </h4>
+
+    <div>
+      <p>
+        You are able to modify the entries of your data matrix.
+        For example, if you notice something weird in the table you can change
+        the single
+        entries (click + enter (save) or esc (cancel)). You are also able to
+        select some rows (Cmd
+        + click or Ctrl + click) or columns (Alt + click) to be excluded from
+        the data-set.
+      </p>
+      <button id="show_table"
+              class="btn btn-sm btn-primary glyphicon glyphicon-plus"></button>
+
+
+    </div>
+
+    <div id="list"></div>
+  </div>
+  <div class="row box">
+    <h4>Computation Methods</h4>
+
+    <div id="methods">
+      {%- for key, value in methods.iteritems() %}
+      <label class="checkbox-inline">
+        <input type="checkbox" id="method{{key}}" onchange="get_methods()"
+               checked="checked" value="{{key}}"> {{value}}
+      </label>
+      {%- endfor %}
+    </div>
+  </div>
+  <div class="row box">
+    <h4>Stability</h4>
+
+    <p>
+      This parameter defines how reliable the computed set is against noise, e.g.
+      a classification of receptors with that set has an accuracy of at least 99%.
+      The larger the stability value is, the more stable is the solution and the larger
+      is the optimal set size. But remember, you want the smallest set you can get.
+      A value of "0" will give you the smallest set, while a value of "150"
+      gives you the most stable solution.
+      If you are not sure about it, just set the value to 50. This gives you a little bit
+      of both worlds.
+    </p>
+
+    <div>
+      <label class="sr-only" for="stability">Stability:</label>
+      <input type="text" id="stability"/>
+
+      <div id="stability_slider"></div>
+    </div>
+  </div>
+  <div class="row">
+    <button id="save" class="btn btn-primary btn-block" onclick="save()">Save
+    </button>
+  </div>
+
+</div>
+{% block docreadyscript %}{% endblock %}
+{% endblock %}

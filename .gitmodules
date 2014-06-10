@@ -1,0 +1,3 @@
+[submodule "principal_odorants"]
+	path = principal_odorants
+	url = git@github.com:Huitzilo/principal_odorants.git

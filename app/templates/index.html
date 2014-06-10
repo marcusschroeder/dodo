@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block content %}
+<h4>Welcome, scientist!</h4>
+<p>
+  Almost all organisms acquired systems to scan their environment for sources
+  of food or pheromones. This is crucial for the survival of any of them.
+  For example, higher animals have developed complex olfactory systems to
+  detect volatile components in the air (odorants). While the morphology of
+  these systems has been revealed, is not yet fully understood how it
+  encodes olfactory information.
+</p><p>
+  Several in-vivo experiments explored
+  the tuning profiles of olfactory receptors and the odorants that are
+  activating them. These experiments are costly and error prone.
+  To locate and identify receptors, their responses have to be compared to
+  reference measurements from previous studies. This also means that a
+  reference set
+  of odorants has to be measured in each experiment without gaining new
+  information.
+  But, the major problem is that the number of measurable odorants per
+  experiment is
+  physiologically limited. Thus, it is desirable to reduce the size of this
+  reference set. This is, where DODO comes in.
+</p>
+<h4>DODO discovers optimal odorant sets</h4>
+<p>
+  DODO is designed to <b>discover the the smallest possible set of odorants</b>
+  in a
+  data-set by using elaborated optimization methods. This data-set can be
+  either
+  <b>your data</b> from previous experiments or data-sets provided by DODO.
+</p><p>
+  These sets can then be used to identify and discriminate olfactory receptors
+  based on their response spectra.
+</p><br />
+<h4>What do you want to do next?</h4>
+<div class="col-xs-6 col-sm-6 col-md-6">
+  <p>Compute the optimal set of odorants by using either your data or by using a data-set
+    provided by DODO.</p>
+  <a class="bottom btn btn-primary" href="fs">Feature Selection</a>
+</div>
+<div class="col-xs-6 col-sm-6 col-md-6">
+  <p>You already used DODO and now you want classify the unlabeled
+    olfactory receptors in your new measurement data.</p>
+  <a class="bottom btn btn-success" href="cs">Classification</a>
+</div>
+{% endblock %}

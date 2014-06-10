@@ -1,0 +1,242 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+<script>
+
+  var reference = [];
+  var data = [];
+
+  function renderSameOdorants(arr) {
+    $('#list').empty();
+    var table = $("<table />");
+    table.addClass("table");
+    table.addClass("table-hover");
+    table.addClass("table-bordered");
+
+    // table head
+    var tr = $("<tr class='header'/>")
+    var th = $("<th>" + arr.length + " Matching Odorants</th>")
+    tr.append(th);
+    table.append(tr);
+
+    // table content
+    for (var i = 0; i < arr.length; i++) {
+      var tr = $("<tr />");
+      var td = $("<td />");
+      td.html(arr[i]);
+      $(tr).append(td);
+      table.append(tr);
+    }
+
+    $('#list').append(table);
+  }
+
+  function compareOdorants() {
+
+    var o1 = reference[0].slice(1);
+    var o2 = data[0];
+
+    var sameOdorants = o1.filter(function (v) {
+      if (o2.indexOf(v) >= 0) {
+        return v;
+      }
+    })
+
+    renderSameOdorants(sameOdorants);
+  }
+
+  function handleMatrixFileSelect(elem, matrix, id) {
+    var file = elem.target.files[0];
+    var reader = new FileReader();
+    var link_reg = /(http:\/\/|https:\/\/)/i;
+
+    reader.onload = function (file) {
+      var content = file.target.result;
+      var rows = file.target.result.split(/[\r\n|\n]+/);
+
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i] != '') {
+          var arr = rows[i].split(/[;,]/);
+          matrix.push(arr);
+        }
+      }
+
+      if (id == "#reference-info") {
+        $(id).text("found " + (matrix[0].length - 1) + " Odorants");
+      } else {
+        $(id).text("found " + matrix[0].length + " Odorants");
+      }
+
+      if (reference.length > 0 && data.length > 0) {
+        compareOdorants();
+        $('#classify').show();
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  $(function () {
+    $('#reference').change(function (e) {
+      reference = [];
+      handleMatrixFileSelect(e, reference, "#reference-info");
+    });
+
+    $('#reference-upload-button').click(function () {
+      $('#reference').click();
+      $(this).text("Change reference set");
+    })
+
+    $('#data').change(function (e) {
+      data = [];
+      handleMatrixFileSelect(e, data, "#data-info");
+    });
+    $('#data-upload-button').click(function () {
+      $('#data').click();
+      $(this).text("Change data set");
+    })
+  });
+
+  function get_request_body() {
+    return JSON.stringify({
+      "reference": reference,
+      "data": data
+    });
+  }
+
+  function renderMapping(arr) {
+    $('#mapping').empty();
+    var table = $("<table />");
+    table.addClass("table");
+    table.addClass("table-hover");
+    table.addClass("table-bordered");
+
+    // table head
+    var tr = $("<tr class='header'/>")
+    var th = $("<th>Index</th>")
+    tr.append(th);
+    var th = $("<th>Label</th>")
+    tr.append(th);
+    var th = $("<th> Distance</th>")
+    tr.append(th);
+
+    table.append(tr);
+
+    // table content
+    for (var i = 0; i < arr.length; i++) {
+      var tr = $("<tr />");
+
+      var td = $("<td />");
+      td.html(i);
+      $(tr).append(td);
+
+      var td = $("<td />");
+      td.text(arr[i][0]);
+      $(tr).append(td);
+
+      var td = $("<td />");
+      td.text(arr[i][1]);
+      $(tr).append(td);
+
+      table.append(tr);
+    }
+    $('#mapping').append(table);
+  }
+
+
+  function classify() {
+    $("#classify").prop("disabled", true);
+    var rb = get_request_body();
+    $.ajax({
+      url: '/cs',
+      type: 'POST',
+      data: rb,
+      contentType: "application/json; charset=UTF-8",
+      dataType: "json",
+      success: function (response) {
+        $("#the-reference-form").hide();
+        $("#the-data-form").hide();
+        $("#classify").fadeOut("fast");
+        renderMapping(response);
+      },
+      error: function (response) {
+        $("#classify").text("Something went wrong :( Please reload.")
+        $("#classify").addClass("btn-danger")
+        $("#feedback_message").val("Classification with the following payload went wrong:" + rb);
+        fm.triggerAction(null);
+
+      }
+    });
+
+  }
+
+  $(function () {
+    $('#classify').hide();
+  });
+</script>
+{% endblock %}
+
+{% block header %}
+<h4>&gt; Classification</h4>
+{% endblock %}
+
+{% block content %}
+<h4>Welcome to DODOs classification</h4>
+<p>
+  DODO is also able to classify the unlabeled olfactory receptors from your new
+  measurement
+  with the help from a previously <a href="/fs">computed odorant set by
+  DODO</a> (actually, you could also use <a
+  href="{{url_for('static', filename='rsc/data_example.png')}}"
+  onclick="show_data_example()">any well formatted *.csv file</a> separated with semicolons or commas).
+</p>
+<ol>
+  <li>
+    First, select a reference set in csv format with the odorant names in the
+    first row. If the parsing works, you should see the correct number of
+    odorants.
+  </li>
+  <li>
+    Second, select your new measurement set with the unlabeled receptors. The
+    same rule applies here: the first row contains the name of the odorants.
+  </li>
+  <li>Finally, click on "classify" and wait for the results to be displayed.
+  </li>
+</ol>
+<p>Info: Your files should not be larger than 2 MB.</p>
+<div class="col-xs-6 col-sm-6 col-md-6">
+  <form name="the-reference-form" action="javascript:void(0);"
+        id="the-reference-form">
+    <input
+      name="reference"
+      type="file"
+      id="reference"
+      accept=".csv">
+    <button name="reference-upload-button"
+            class="btn btn-primary" id="reference-upload-button">Reference
+      data-set
+    </button>
+  </form>
+  <div id="reference-info"></div>
+</div>
+<div class="col-xs-6 col-sm-6 col-md-6">
+  <form name="the-data-form" action="javascript:void(0);" id="the-data-form">
+    <input
+      name="data"
+      type="file"
+      id="data"
+      accept=".csv">
+    <button name="data-upload-button"
+            class="btn btn-primary" id="data-upload-button">Receptors to
+      classify
+    </button>
+  </form>
+  <div id="data-info"></div>
+</div>
+<div class="col-md-12 col-xs-12 col-sd-12" style="clear:both;margin-top:20px">
+  <div id="list"></div>
+  <button id="classify" class="btn btn-primary" onclick="classify()">Classify
+  </button>
+</div>
+<div id="mapping"></div>
+
+{% endblock %}

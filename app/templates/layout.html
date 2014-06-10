@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% block head %}
+  <title>Detection of Diagnostic Odors</title>
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename=config.BOOTSTRAP_CSS) }}"/>
+  <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/style.css') }}"/>
+  <script src="{{ url_for('static', filename=config.JQUERY) }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename=config.FEEDBACK_ME_CSS) }}"/>
+  <script src="{{ url_for('static', filename=config.FEEDBACK_ME_JS) }}"></script>
+
+  <script>
+    $(document).ready(function () {
+      //set up some minimal options for the feedback_me plugin
+      fm_options = {
+
+        show_email: true,
+        email_required: true,
+
+
+        position:"right-bottom",
+        name_placeholder: "Name please",
+        email_placeholder: "Email goes here",
+        message_placeholder: "Go ahead, type your feedback here...",
+
+        name_required: false,
+        message_required: true,
+
+        show_asterisk_for_required: true,
+
+        feedback_url: "/feedback"
+      };
+
+      //init feedback_me plugin
+      fm.init(fm_options);
+    });
+  </script>
+  {% endblock %}
+</head>
+
+<body class="container">
+<header id="header" class="jumbotron">
+  <a href="/">
+    <h1>DODO</h1>
+  </a>
+  {% block header %}
+  <h4>Detection of Diagnostic Odorants</h4>
+  {% endblock header %}
+</header>
+<section id="content" class="col-xs-12 col-sm-12 col-md-12">
+  {% block content %}{% endblock %}
+</section>
+<br style="clear:both"/><br/>
+<footer>
+  {% block footer %}
+  <hr>
+  <a href="/about">About DODO</a> | Version: beta 0.9 - 01.03.2014
+  {% endblock %}
+</footer>
+<script src="{{ url_for('static', filename=config.BOOTSTRAP_JS) }}"></script>
+</body>
+
+</html>

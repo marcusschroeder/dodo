@@ -1,0 +1,38 @@
+{% extends "upload_template.html" %}
+
+{% block intro %}
+<h4>Please read, before you start</h4>
+<p>
+  The first step is to feed DODO with an olfactory <a
+  href="{{url_for('static', filename='rsc/data_example.png')}}"
+  onclick="show_data_example()">matrix</a>.
+  It prefers well formatted *.csv files either separated with either semicolons
+  or
+  commas. This data-chunk should not be larger than 2 MB.
+</p>
+<p>
+  A little information about the structure of your *.csv file.
+  Make sure, your file provides information about receptors and odorants, e.g.
+  the first row should contain the names of the olfactory receptors and
+  the first column should contain the names of the odorants. If the opposite is
+  true, that is fine.
+  Just make sure you do not have measurement information in the first row or
+  first column.
+</p>
+
+{{super()}}
+{% endblock %}
+
+{% block uploadform %}
+<form name="the-form" action="javascript:void(0);" id="the-form">
+  <input
+    name="the-file"
+    type="file"
+    id="the-file"
+    accept=".csv">
+  <button name="file-upload-button"
+          class="btn btn-primary" id="file-upload-button">Upload
+  </button>
+
+</form>
+{% endblock %}

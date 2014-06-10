@@ -1,0 +1,18 @@
+<table class="table table-hover table-bordered footable">
+  <thead>
+  <tr>
+    <th data-class="alpha" data-sort-initial="true">Feature</th>
+    {%- for i in rows %}
+    <th data-type="numeric">{{i}}</th>
+    {%- endfor %}
+  </tr>
+  </thead>
+  {%- for row in table %}
+  <tr id="row{{loop.index0}}">
+    <td id="col{{loop.index0}}">{{features[loop.index0]}}</td>
+    {%- for elem in row %}
+    <td id="col{{ loop.index0 }}">{{ elem }}</td>
+    {%- endfor %}
+  </tr>
+  {%- endfor %}
+</table>

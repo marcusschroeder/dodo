@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block head %}
+{{ super() }}
+<script>
+  $(document).ready(function () {
+    $("#jobid-btn").click(function () {
+      var v = $("#jobid").val();
+      if (v != "") {
+        window.location = "job/" + v;
+      }
+    })
+  })
+</script>
+{% endblock %}
+
+{% block header %}
+<h4>&gt; Feature Selection</h4>
+{% endblock %}
+
+{% block content %}
+<h3>Chose one of the three options.</h3>
+<div class="col-xs-12 col-sm-4 col-md-4">
+  <div class="box">
+    <h4>Use uploader</h4>
+
+    <p>Use DODO to discover the optimal set in your own data.</p>
+
+    <a class="btn btn-primary btn-block" href="/upload">Upload</a>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-4 col-md-4">
+  <div class="box">
+    <h4>Select data-set</h4>
+
+    <p>If you want to compute features from existing
+      data-sets.</p>
+
+    <div class="form-group">
+      <select id="data_set" name="data_set" class="form-control">
+        {%- for key, value in datasets.iteritems() %}
+        <option value="{{key}}">{{value}}</option>
+        {%- endfor %}
+      </select>
+    </div>
+    <button class="btn btn-primary btn-block" name="new" type="submit"
+            onclick="javascript:(
+      window.location.href='upload?data_set=' + $('#data_set').val()
+    )">Go
+    </button>
+  </div>
+</div>
+<div class="col-xs-12 col-sm-4  col-md-4">
+  <div class="box">
+    <h4>Return to existing job</h4>
+
+    <p>If you have been here before.</p>
+
+    <form action="javascript:void(0)" role="form">
+      <div class="form-group">
+        <label class="sr-only" for="jobid">JobId</label>
+        <input id="jobid" placeholder="Job Id" class="form-control" type="text"
+               name="jobid">
+      </div>
+      <button id="jobid-btn" class="btn btn-primary btn-block" type="submit">
+        Resume
+      </button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

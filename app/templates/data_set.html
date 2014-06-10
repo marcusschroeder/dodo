@@ -1,0 +1,24 @@
+{% extends "upload_template.html" %}
+
+{% block head %}
+{{ super() }}
+<script>
+  var matrix = [
+    {%- for row in matrix %}
+    [
+    {%- for elem in row %}
+    "{{ elem }}",
+    {%-endfor %}
+    ],
+  {%-endfor %}
+  ]
+</script>
+{% endblock %}
+
+{% block docreadyscript %}
+<script>
+  $(document).ready(function () {
+    updateInfo();
+  })
+</script>
+{% endblock %}

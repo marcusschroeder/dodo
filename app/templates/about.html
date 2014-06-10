@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="col-md-4">
+  <div class="box">
+    DODO was developed at the <a href="">Theoretical Neuroscience Group
+    Berlin</a> by <a href="http://marcusschroeder.com">Marcus Schroeder</a> in 2013/2014.
+
+
+    <h3>Imprint</h3>
+    <h4>Owner</h4>
+    Marcus Schroeder<br/>
+    Lindenallee 60<br/>
+    13088 Berlin<br/>
+    Germany
+
+    <br /><br />
+    Mail: marcus.schroeder@fu-berlin.de
+  </div>
+</div>
+
+<div class="col-md-4">
+  <div class="box">
+    <a id="github-ref"
+       href="https://github.com/marcusschroeder/olfactory"><img
+      src="{{url_for('static', filename='rsc/GitHub_Logo.png')}}"
+      width="100px"/></a><br /><br />
+    DODO is open source and can be found on GitHub.com.
+  </div>
+</div>
+
+
+<div class="col-md-4">
+  <div class="box">
+    <a rel="license"
+       href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img
+      alt="Creative Commons License" style="border-width:0"
+      src="http://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png"/></a><br/><br /><span
+    xmlns:dct="http://purl.org/dc/terms/"
+    href="http://purl.org/dc/dcmitype/InteractiveResource" property="dct:title"
+    rel="dct:type">DODO</span> by <span
+    xmlns:cc="http://creativecommons.org/ns#"
+    property="cc:attributionName">Marcus Schroeder</span>
+    is licensed under a <a rel="license"
+                           href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative
+    Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+  </div>
+</div>
+
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}

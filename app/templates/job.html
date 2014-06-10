@@ -1,0 +1,117 @@
+{% extends "layout.html" %}
+
+{% block head %}
+{{ super() }}
+
+<link rel="stylesheet" href="{{ url_for('static', filename=config.FOOTABLE_CSS) }}"/>
+<script src="{{ url_for('static', filename=config.FOOTABLE_JS) }}"></script>
+<script src="{{ url_for('static', filename=config.FOOTABLE_JS_SORT) }}"></script>
+<script src="{{ url_for('static', filename=config.D3_JS) }}"></script>
+<script src="{{ url_for('static', filename='js/job.js') }}"></script>
+<script>
+  var job_id = "{{ job_id }}";
+  var odorants = [
+    {%- for i in odorants %}
+    '{{ i }}',
+    {%- endfor %}
+  ]
+  var methods = [
+    {%- for k in methods %}
+    ['{{ k[0] }}' , '{{k[1]}}'],
+    {%- endfor %}
+  ];
+
+  var optimal = {
+    {%- for k, v in optimal.iteritems() %}
+      '{{ k }}' : '{{ v }}',
+    {%- endfor %}
+  };
+</script>
+<style>
+  path {
+    stroke: steelblue;
+    stroke-width: 1;
+    fill: none;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: grey;
+    stroke-width: 1;
+    shape-rendering: crispEdges;
+  }
+
+  div.tooltip {
+    position: absolute;
+    text-align: left;
+    /*width: 120px;*/
+    /*height: 60px;*/
+    padding: 2px;
+    font: 12px sans-serif;
+    color: white;
+    font-weight: bold;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<h3>Job Id: {{ job_id }}</h3>
+<p>Here are the results computed by DODO for your data-set. If you want to come back later you can either set a bookmark or remember this job-id.</p>
+<h4>The data</h4>
+<div>Features: {{ features }}</div>
+<div>Rows: {{ rows }}</div>
+<div>Stability: {{ stability }}
+<div>Noise: {{ noise }}</div>
+<p>Info: <i>Noise</i> depends on the data-set and the stability level you selected before.</p>
+<br/>
+<p>
+  <button id="matrix-toggl" class="btn">
+    Show data table
+  </button>
+  <button id="download_button" class="btn">
+    Download data table
+  </button>
+</p>
+
+
+<div id="data-table">
+  {% autoescape false %}
+  {{ table }}
+  {% endautoescape %}
+</div>
+<h3>Optimal odor sets</h3>
+<p>Here you see the odorants for the selected set of size <b><span id="odors">0</span></b>.
+  You can change the size of the odor set by clicking on a data-point in the plot below. This will give you different odorants, of course.
+  The number behind the method name indicates the optimal set (e.g. accuracy > 99%) for that method. If you want to see these odorants,
+  click on the corresponding number in the plot.
+</p>
+<p>
+  You are also able to download the results by clicking on the little symbol next to the methods name in the table.<br />
+  If you hover over an odorant, the same odorant in the other columns will be highlighted. This way you can easily find (dis)similarities between the methods.
+</p>
+<div id="odorants"></div>
+<h3>Plot</h3>
+<p>
+  This plot shows you the the maximal possible pairwise Euclidean distance
+  between all receptors over all set of odorants with the corresponding size. Larger distances are better, because they lead to a
+  better discrimination between receptors.
+</p>
+<p>
+  For example, backward elimination yields a maximal distance of 50 with a set of size 6.
+  This means, all pairwise distance between all receptors have been computed
+  for all possible odorant sets of size 6. The set that leads to the best distance is chosen.
+</p>
+<div id="plot"></div>
+<script>
+  $(function () {
+    $(".footable").footable()
+  })
+</script>
+<script src="{{ url_for('static', filename='js/plotting.js') }}"></script>
+{% endblock %}
