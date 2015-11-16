@@ -1,2 +1,2 @@
-APP_ROOT = "/Users/marcus/workspace/repos/dodo"
+APP_ROOT = "/Users/m/workspace/repos/dodo"
 DEBUG = True

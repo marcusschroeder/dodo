@@ -23,7 +23,7 @@ app = Flask(__name__)
 
 app.config.from_pyfile("config.py")
 try:
-    app.config.from_envvar("CONFIG")
+    app.config.from_envvar("DODO_CONFIG")
 except RuntimeError as inst:
     app.logger.info("No development config specified. Use production config.")
 

@@ -1,0 +1,54 @@
+#!/usr/bin/env python
+# encoding: utf-8
+"""
+Compute the correlation all-to-all between receptors.
+Save those with a high pairwise correlation to a plot file.
+"""
+import pylab as pl
+import numpy as np
+import scipy as sp
+from scipy import stats
+
+from example.hallem import Hallem
+
+
+hallem = Hallem()
+matrix = np.transpose(hallem.response)
+
+corr = []
+strong_corr = []
+for i, rowA in enumerate(matrix):
+    for j, rowB in enumerate(matrix):
+        if j > i:
+            c = sp.stats.pearsonr(rowA, rowB)[0]
+            if c > 0.7 or c < -0.5:
+                strong_corr.append((i, j, c))
+            corr.append(c)
+
+strong_corr = np.asarray(strong_corr)
+pl.figure(figsize=(6, 5), dpi=320)
+
+n, bins, patches = pl.hist(corr, bins=20, histtype='stepfilled', normed=1)
+
+#plot gauss curve
+mu, sigma = stats.norm.fit(corr)
+x_curve = np.arange(-1, 1, 0.01)
+pl.plot(x_curve, stats.norm.pdf(x_curve, mu, sigma), 'r', lw=3)
+scale = n * np.diff(bins)
+
+print np.min(corr), np.max(corr)
+#fix scaling
+nmax = np.max(n)
+scale = np.max(n * np.diff(bins))
+n_ticks = 6.
+pl.yticks(np.arange(nmax / n_ticks, nmax * (1 + 2 / n_ticks), nmax / n_ticks),
+          np.round(np.arange(scale / n_ticks, scale * (1 + 2 / n_ticks),
+                             scale / n_ticks), 2))
+
+pl.grid()
+pl.xlim(-1, 1)
+pl.title("Correlation between ORs")
+pl.xlabel("Pearson Correlation")
+pl.ylabel("Frequency")
+pl.legend([r"$\mathcal{N}(\mu=%1.2f,\sigma^2=%1.2f)$" % (mu, sigma)])
+pl.savefig("../figures/hallem/correlation/ORs/pearson_ORs.png")

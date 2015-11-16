@@ -64,6 +64,7 @@ def load_dataset(name):
     path_to_csv = os.path.join(current_app.config["APP_ROOT"],
                                current_app.config["DATASETS"],
                                name + ".csv")
+    print path_to_csv
     return __load_csv(path_to_csv)
 
 

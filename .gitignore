@@ -1,26 +1,6 @@
 .idea/
 
-.idea/encodings.xml
-
-.idea/misc.xml
-
 .DS_Store
-
-.idea/.name
-
-.idea/modules.xml
-
-.idea/other.xml
-
-.idea/olfactory.iml
-
-.idea/scopes/scope_settings.xml
-
-.idea/testrunner.xml
-
-.idea/vcs.xml
-
-.idea/workspace.xml
 
 *.pyc
 
@@ -42,6 +22,4 @@ app/static/jquery-2.0.3.min.js
 
 app/static/jquery-2.0.3.min.map
 
-example/IPnotebooks/.ipynb_checkpoints/
-
-.spyderproject
+*.iml
