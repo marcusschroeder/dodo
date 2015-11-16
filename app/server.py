@@ -64,7 +64,7 @@ def feedback():
             "email") + ") send you:" + request.form.get("message"))
         msg["From"] = request.form.get("email")
         msg["To"] = app.config["MAIL"]
-        msg["Subject"] = "Olfactory App"
+        msg["Subject"] = "DODO App"
         p = Popen(["/usr/sbin/sendmail", "-t"], stdin=PIPE)
         p.communicate(msg.as_string())
 
